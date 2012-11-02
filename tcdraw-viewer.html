@@ -1,0 +1,239 @@
+<!doctype html>
+<html class="splitview">
+<head>
+	<title>TC Draw Viewer</title>
+  <meta content="width=device-width, minimum-scale=1, maximum-scale=1,maximum-scale=1, user-scalable=no" name="viewport">
+  <link href="http://code.jquery.com/mobile/1.2.0-beta.1/jquery.mobile-1.2.0-beta.1.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="css/jquery.mobile.css" />
+  <link rel="stylesheet" href="css/jquery.mobile.splitview.css" />
+            <!-- <link rel="stylesheet"  href="css/jquery.mobile.scrollview.css" /> -->
+  <link rel="stylesheet"  href="css/jquery.mobile.grids.collapsible.css" />
+  <script src="js/jquery-1.7.1.js" type="text/javascript"></script>
+  <script type="text/javascript" src="js/jquery.mobile.splitview.js"></script>
+  <script src="js/jquery.mobile.js" type="text/javascript"></script>
+  <script type="text/javascript" src="js/iscroll.js"></script>
+  <script type="text/javascript" src="js/iscroll-wrapper.js"></script>
+  <!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+
+</head>
+<body>
+<div data-role="panel" data-id="menu">
+    <!-- Start of first page -->
+    <div data-role="page" id="menu-page">
+
+        <div data-role="header">
+            <h1>Students</h1>
+            <a href="tcdraw.html" target="_blank" data-icon="plus" class="ui-btn-right">Add</a>
+        </div><!-- /header -->
+
+        <div data-role="content">   
+            <ul id="statement-list" name="statement-list" data-role="listview" data-inset="true"></ul>
+        </div><!-- /content -->
+
+    </div><!-- /page -->
+    <!-- other side panel pages here -->
+</div>
+<div data-role="panel" data-id="main">
+    <!-- Start of second page -->
+    <div data-role="page" id="main-page">
+
+        <div data-role="header">
+            <h1>Results</h1>
+        </div><!-- /header -->
+
+        <div data-role="content">   
+            <div id="statement-content" name="statement-content">
+              <h3 id="actor-name"></h3>
+              <img src="" id="statement-image" name="statement-image" class="statement-image" />
+            </div>
+        </div><!-- /content -->
+
+        <div data-role="footer">
+            <h4>&nbsp;</h4>
+        </div><!-- /footer -->
+    </div><!-- /page -->
+    <!-- other main panel pages here -->
+</div>
+<script>
+$(document).ready(function(){
+
+  var canvasWidth = 500;
+  var canvasHeight = 500;
+
+
+
+var clickX = new Array();
+var clickY = new Array();
+var clickDrag = new Array();
+var paint;
+
+
+getStatements(function(data){
+  //console.log(data);
+
+  //console.log(data.statements[0].context.extensions["http://scorm.com/extensions/tcdraw-data"]);
+
+  for(var i=0;i<data.statements.length;i++){
+    if(data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].base64data){
+      var output = '<li class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-btn-up-c" data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c">';
+      output += '<div class="ui-btn-inner ui-li">';
+      output += '<div class="ui-btn-text">';
+      output += '<a href="#'+data.statements[i].id+'" class="statement-row ui-link-inherit">'+data.statements[i].actor.name+'</a>';
+      output += '</div></div></li>';
+
+      $('#statement-list').append(output);
+    }
+    //$('#tcdraw-viewer').append('<div id="'+data.statements[i].id+'" class=""><div class="lead">'+data.statements[i].actor.name+'</div><div id="canvas-'+data.statements[i].id+'"></div></div>');
+    // var canvasDiv = document.getElementById('canvas-'+data.statements[i].id);
+    // canvas = document.createElement('canvas');
+    // canvas.setAttribute('width', canvasWidth);
+    // canvas.setAttribute('height', data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].height);
+    // canvas.setAttribute('id', 'canvas');
+    // canvasDiv.appendChild(canvas);
+    // context = canvas.getContext("2d");
+
+    // var imgData = data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].base64data;
+
+    // //clickX = data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].x;
+    // //clickY = data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].y;
+    // //clickDrag = data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].drag;
+    // console.log(imgData);
+    // //redraw(canvas, context);
+    // if(imgData!=undefined){
+    //   var myImage = new Image();
+    //   myImage.src = imgData;
+    //   context.drawImage(myImage, 0, 0);
+    // }
+  }
+
+  $('#statement-list').listview('refresh');
+});
+
+// function redraw(canvasToRedraw, canvasContext){
+//   canvasToRedraw.width = canvasToRedraw.width; // Clears the canvas
+  
+//   canvasContext.strokeStyle = "#df4b26";
+//   canvasContext.lineJoin = "round";
+//   canvasContext.lineWidth = 5;
+			
+//   for(var i=0; i < clickX.length; i++)
+//   {		
+//     canvasContext.beginPath();
+//     if(clickDrag[i] && i){
+//       canvasContext.moveTo(clickX[i-1], clickY[i-1]);
+//      }else{
+//        canvasContext.moveTo(clickX[i]-1, clickY[i]);
+//      }
+//      canvasContext.lineTo(clickX[i], clickY[i]);
+//      canvasContext.closePath();
+//      canvasContext.stroke();
+//   }
+// }
+
+
+
+function getStatements(callback){
+
+    $.ajax({
+    url: 'https://watershed.ws/tc/statements/?object={"id":"http://scorm.com/tcdraw-87dab09b-7c33-49a2-9080-06fbe54f1560"}',
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) {
+      //console.log(data); 
+      callback(data);
+    },
+    error: function(err) {
+      console.log(err);
+      alert('error:'+err.status+' - '+err.statusText);
+      
+    },
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('Authorization', 'Basic YnJpYW4ucm9nZXJzK3RjZHJhd0BzY29ybS5jb206c2Nvcm0yMDA0');
+      xhr.setRequestHeader('X-Experience-API-Version','0.95');
+    }
+  });
+}
+
+function getStatement(statementId, callback){
+
+    $.ajax({
+    url: 'https://watershed.ws/tc/statements?statementId='+statementId,
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) {
+      //console.log(data); 
+      callback(data);
+    },
+    error: function(err) {
+      console.log(err);
+      alert('error:'+err.status+' - '+err.statusText);
+      
+    },
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('Authorization', 'Basic YnJpYW4ucm9nZXJzK3RjZHJhd0BzY29ybS5jb206c2Nvcm0yMDA0');
+      xhr.setRequestHeader('X-Experience-API-Version','0.95');
+    }
+  });
+}
+
+
+$('#canvas').mousedown(function(e){
+  var mouseX = e.pageX - this.offsetLeft;
+  var mouseY = e.pageY - this.offsetTop;
+    
+  paint = true;
+  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+  redraw();
+});
+
+$('#canvas').mousemove(function(e){
+  if(paint){
+    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+    redraw();
+  }
+});
+
+$('#canvas').mouseup(function(e){
+  paint = false;
+});
+
+$('#canvas').mouseleave(function(e){
+  paint = false;
+});
+
+$('.statement-row').live('click',function(){
+  console.log($(this).attr('href'));
+  //$('#statement-content').append($(this).attr('href'));
+  var sid = $(this).attr('href').substr(1);
+  getStatement(sid, function(data){
+    console.log(data);
+    $('#actor-name').html(data.actor.name + ' ['+data.actor.mbox.replace('mailto:','')+']');
+    $('#statement-image').attr('src',data.context.extensions["http://scorm.com/extensions/tcdraw-data"].base64data);
+    $('#statement-image').height(data.context.extensions["http://scorm.com/extensions/tcdraw-data"].height);
+    $('#statement-image').width('300px');
+  });
+});
+
+
+function GUID ()
+{
+    var S4 = function ()
+    {
+        return Math.floor(
+                Math.random() * 0x10000 /* 65536 */
+            ).toString(16);
+    };
+
+    return (
+            S4() + S4() + "-" +
+            S4() + "-" +
+            S4() + "-" +
+            S4() + "-" +
+            S4() + S4() + S4()
+        );
+}
+
+});
+</script>
+</body>
+</html>

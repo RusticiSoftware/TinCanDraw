@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Tin Can Draw - Rustici Software</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="http://cdn.tincanapi.com/wp-content/themes/tincanapi/style.css?v2.3" type="text/css" media="all"> -->
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+   
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!-- <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png"> -->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+        <h1><img src="app-icon-tc-draw.png" class="img-polaroid" style="margin:10px;">Tin Can Draw</h1>
+        <p>The Tin Can API allows us to do a lot of things that we couldn't do before.</p>
+        <p>Could you use SCORM to track a painting class? No way.</p>
+        <p>What about a simple handwriting exercise? Nope. But with Tin Can, you can.</p>
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span5">
+          <h2>Drawing</h2>
+        <p>Trace a word in this sample activity. A Tin Can statement is created out of your drawing. The experience is stored in Watershed.</p>
+          <img src="cat-sample.png" class="img-polaroid" style="width:200px; margin:20px">
+
+          <p>Use a Mobile device on the 'Draw' link below to get the best drawing experience in Watershed (or use the field to email a link to your phone).</p>
+          <a class="btn" href="tcdraw.html">Start Drawing</a>
+          <br>
+           <div id="email-me" name="email-me" class="navbar-form pull-left">
+              <input class="span2" type="text" placeholder="Email" id="user-email" name="user-email">
+              <button class="btn" id="create-email" name="create-email">Create Email</button>
+            </div>
+        </div>
+        <div class="span5">
+          <h2>Reporting</h2>
+          <p>The really cool thing is that on the reporting side of Tin Can Draw, the experience information that's stored in Watershed can be used to display your exact drawing.</p>
+          <img src="report-sample.png" class="img-polaroid" style="width:200px; margin:20px">
+          <p>A teacher could use this to see how students progress with their handwriting abilities and quickly see who needs extra practice.</p>
+          <p><a class="btn" href="tcdraw-viewer.html">View Reports</a></p>
+       </div>
+       
+      </div>
+
+      <hr>
+
+      <footer>
+        <!-- <p>&copy; Rustici Software 2012</p> -->
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-1.7.1.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script>
+    $(document).ready(function(){
+      $('#create-email').click(function(){
+        var link = window.location.href.replace('index.html','tcdraw.html');
+        if(link.indexOf('tcdraw.html')<0){
+          link += '/tcdraw.html';
+        }
+        window.open('mailto:'+$('#user-email').val()+'?subject=tcdraw-mobile-link&body='+link);
+      });
+    });
+    </script>
+  </body>
+</html>

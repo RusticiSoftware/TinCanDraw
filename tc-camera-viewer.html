@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+<head>
+	<title>TC Draw Viewer</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script src="js/megapix-image.js" type="text/javascript"></script>
+  <style>
+  #tcdraw {
+    width: 710px;
+    height: 500px;
+  }
+    #canvasDiv {
+      border: 2px solid #3f3f3f;
+      width: 500px;
+      height: 500px;
+      float: left;
+    }
+    #toolsDiv {
+      border: 2px solid #0f0f0f;
+      width: 200px;
+      height: 500px;
+      float: right;
+    }
+    canvas {
+      border: 1px solid #3f3f3f;
+    }
+  </style>
+</head>
+<body>
+  <div id="tcdraw-viewer">
+    <img src="" id="tcImage" />
+  </div>
+<script>
+$(document).ready(function(){
+
+  var canvasWidth = 500;
+  var canvasHeight = 500;
+
+
+
+var clickX = new Array();
+var clickY = new Array();
+var clickDrag = new Array();
+var paint;
+
+
+getStatements(function(data){
+  console.log(data);
+
+  console.log(data.statements[0].context.extensions["http://scorm.com/extensions/tcdraw-data"]);
+
+  //for(var i=0;i<data.statements.length;i++){
+    var i = 0;
+    if(data.statements[i].context && data.statements[i].context.extensions["http://scorm.com/extensions/tc-camera-data"].width <= 1024){
+      $('#tcdraw-viewer').append('<div id="'+data.statements[i].id+'"><div class="user">'+data.statements[i].actor.name+'</div><div id="canvas-'+data.statements[i].id+'"></div></div>');
+      var canvasDiv = document.getElementById('canvas-'+data.statements[i].id);
+      canvas = document.createElement('canvas');
+      canvas.setAttribute('width', data.statements[i].context.extensions["http://scorm.com/extensions/tc-camera-data"].width);
+      canvas.setAttribute('height', data.statements[i].context.extensions["http://scorm.com/extensions/tc-camera-data"].height);
+      canvas.setAttribute('id', 'canvas');
+      canvasDiv.appendChild(canvas);
+      context = canvas.getContext("2d");
+
+      var imgData = data.statements[i].context.extensions["http://scorm.com/extensions/tc-camera-data"].base64data;
+      //clickX = data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].x;
+      //clickY = data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].y;
+      //clickDrag = data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].drag;
+      //console.log(imgData);
+      //redraw(canvas, context);
+      //var img = new Image();
+      
+      var scale = 1.0;
+      // context.drawImage(myImage, 0, 0, data.statements[i].context.extensions["http://scorm.com/extensions/tc-camera-data"].width, data.statements[i].context.extensions["http://scorm.com/extensions/tc-camera-data"].height);
+
+      var img = $('#tcImage')[0];
+        // img.id = "input-image";
+      img.src = imgData;  
+        img.addEventListener('load', function(){
+            imgWidth = img.offsetWidth,
+            imgHeight = img.offsetHeight;
+            //canvas.width = imgWidth;
+            //canvas.height = imgHeight;
+            console.log(canvas);
+            new MegaPixImage(img).render(canvas, { width: imgWidth * scale, height: imgHeight * scale });
+            
+          }, false);
+
+      }
+  //}
+});
+
+// function redraw(canvasToRedraw, canvasContext){
+//   canvasToRedraw.width = canvasToRedraw.width; // Clears the canvas
+  
+//   canvasContext.strokeStyle = "#df4b26";
+//   canvasContext.lineJoin = "round";
+//   canvasContext.lineWidth = 5;
+			
+//   for(var i=0; i < clickX.length; i++)
+//   {		
+//     canvasContext.beginPath();
+//     if(clickDrag[i] && i){
+//       canvasContext.moveTo(clickX[i-1], clickY[i-1]);
+//      }else{
+//        canvasContext.moveTo(clickX[i]-1, clickY[i]);
+//      }
+//      canvasContext.lineTo(clickX[i], clickY[i]);
+//      canvasContext.closePath();
+//      canvasContext.stroke();
+//   }
+// }
+
+
+
+function getStatements(callback){
+
+    $.ajax({
+    url: 'https://cloud.scorm.com/ScormEngineInterface/TCAPI/public/statements/?object={"id":"http://scorm.com/tc-camera-d9999462-2505-4e60-b905-aa69ccc1c250"}',
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) {
+      //console.log(data); 
+      callback(data);
+    },
+    error: function(err) {
+      console.log(err);
+      alert('error:'+err.status+' - '+err.statusText);
+      
+    },
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('Authorization', 'Basic VGVzdDpWR1Z6ZEZWelpYSTZjR0Z6YzNkdmNtUT0=');
+      xhr.setRequestHeader('X-Experience-API-Version','0.95');
+    }
+  });
+}
+
+
+
+$('#canvas').mousedown(function(e){
+  var mouseX = e.pageX - this.offsetLeft;
+  var mouseY = e.pageY - this.offsetTop;
+    
+  paint = true;
+  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+  redraw();
+});
+
+$('#canvas').mousemove(function(e){
+  if(paint){
+    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+    redraw();
+  }
+});
+
+$('#canvas').mouseup(function(e){
+  paint = false;
+});
+
+$('#canvas').mouseleave(function(e){
+  paint = false;
+});
+
+
+
+
+function GUID ()
+{
+    var S4 = function ()
+    {
+        return Math.floor(
+                Math.random() * 0x10000 /* 65536 */
+            ).toString(16);
+    };
+
+    return (
+            S4() + S4() + "-" +
+            S4() + "-" +
+            S4() + "-" +
+            S4() + "-" +
+            S4() + S4() + S4()
+        );
+}
+
+});
+</script>
+</body>
+</html>
