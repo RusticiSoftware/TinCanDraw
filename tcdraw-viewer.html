@@ -6,7 +6,6 @@
   <link href="http://code.jquery.com/mobile/1.2.0-beta.1/jquery.mobile-1.2.0-beta.1.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="css/jquery.mobile.css" />
   <link rel="stylesheet" href="css/jquery.mobile.splitview.css" />
-            <!-- <link rel="stylesheet"  href="css/jquery.mobile.scrollview.css" /> -->
   <link rel="stylesheet"  href="css/jquery.mobile.grids.collapsible.css" />
   <script src="js/jquery-1.7.1.js" type="text/javascript"></script>
   <script type="text/javascript" src="js/jquery.mobile.splitview.js"></script>
@@ -74,7 +73,7 @@ getStatements(function(data){
   //console.log(data.statements[0].context.extensions["http://scorm.com/extensions/tcdraw-data"]);
 
   for(var i=0;i<data.statements.length;i++){
-    if(data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].base64data){
+
       var output = '<li class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-btn-up-c" data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c">';
       output += '<div class="ui-btn-inner ui-li">';
       output += '<div class="ui-btn-text">';
@@ -82,55 +81,10 @@ getStatements(function(data){
       output += '</div></div></li>';
 
       $('#statement-list').append(output);
-    }
-    //$('#tcdraw-viewer').append('<div id="'+data.statements[i].id+'" class=""><div class="lead">'+data.statements[i].actor.name+'</div><div id="canvas-'+data.statements[i].id+'"></div></div>');
-    // var canvasDiv = document.getElementById('canvas-'+data.statements[i].id);
-    // canvas = document.createElement('canvas');
-    // canvas.setAttribute('width', canvasWidth);
-    // canvas.setAttribute('height', data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].height);
-    // canvas.setAttribute('id', 'canvas');
-    // canvasDiv.appendChild(canvas);
-    // context = canvas.getContext("2d");
-
-    // var imgData = data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].base64data;
-
-    // //clickX = data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].x;
-    // //clickY = data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].y;
-    // //clickDrag = data.statements[i].context.extensions["http://scorm.com/extensions/tcdraw-data"].drag;
-    // console.log(imgData);
-    // //redraw(canvas, context);
-    // if(imgData!=undefined){
-    //   var myImage = new Image();
-    //   myImage.src = imgData;
-    //   context.drawImage(myImage, 0, 0);
-    // }
   }
 
   $('#statement-list').listview('refresh');
 });
-
-// function redraw(canvasToRedraw, canvasContext){
-//   canvasToRedraw.width = canvasToRedraw.width; // Clears the canvas
-  
-//   canvasContext.strokeStyle = "#df4b26";
-//   canvasContext.lineJoin = "round";
-//   canvasContext.lineWidth = 5;
-			
-//   for(var i=0; i < clickX.length; i++)
-//   {		
-//     canvasContext.beginPath();
-//     if(clickDrag[i] && i){
-//       canvasContext.moveTo(clickX[i-1], clickY[i-1]);
-//      }else{
-//        canvasContext.moveTo(clickX[i]-1, clickY[i]);
-//      }
-//      canvasContext.lineTo(clickX[i], clickY[i]);
-//      canvasContext.closePath();
-//      canvasContext.stroke();
-//   }
-// }
-
-
 
 function getStatements(callback){
 
@@ -208,9 +162,16 @@ $('.statement-row').live('click',function(){
   getStatement(sid, function(data){
     console.log(data);
     $('#actor-name').html(data.actor.name + ' ['+data.actor.mbox.replace('mailto:','')+']');
-    $('#statement-image').attr('src',data.context.extensions["http://scorm.com/extensions/tcdraw-data"].base64data);
-    $('#statement-image').height(data.context.extensions["http://scorm.com/extensions/tcdraw-data"].height);
-    $('#statement-image').width('300px');
+    if(data.result){
+      // adding this when I changed the statement format to still allow legacy statements to show in report
+      $('#statement-image').attr('src',data.result.extensions["http://scorm.com/extensions/tcdraw-data"].base64data);
+      $('#statement-image').height(data.result.extensions["http://scorm.com/extensions/tcdraw-data"].height);
+      $('#statement-image').width(data.result.extensions["http://scorm.com/extensions/tcdraw-data"].width);
+    }else{
+      $('#statement-image').attr('src',data.context.extensions["http://scorm.com/extensions/tcdraw-data"].base64data);
+      $('#statement-image').height(data.context.extensions["http://scorm.com/extensions/tcdraw-data"].height);
+      $('#statement-image').width(data.context.extensions["http://scorm.com/extensions/tcdraw-data"].width);
+    }
   });
 });
 

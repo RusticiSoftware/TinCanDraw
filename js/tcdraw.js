@@ -7,7 +7,7 @@ $(document).ready(function() {
 	var canvasWidth = 300;
 	var canvasHeight = 200;
 	var canvasDiv = document.getElementById('tcdraw');
-	canvas = document.createElement('canvas');
+	var canvas = document.createElement('canvas');
 	canvas.setAttribute('width', canvasWidth);
 	canvas.setAttribute('height', canvasHeight);
 	canvas.setAttribute('id', 'canvas');
@@ -73,8 +73,13 @@ $('#start').click(function() {
 	}
 });
 
+/*
+		Lots of this drawing code was from various articles I found on The Google
+		Most of them were very similar, so the links are not provided here
+*/
 
 // works out the X, Y position of the click inside the canvas from the X, Y position on the page
+// This is for the desktop/mouse drawing
 function getPosition(mouseEvent, drawCanvas) {
 	var x, y;
 	if(mouseEvent.pageX !== undefined && mouseEvent.pageY !== undefined) {
@@ -92,8 +97,6 @@ function getPosition(mouseEvent, drawCanvas) {
 }
 
 function initialize() {
-	// get references to the canvas element as well as the 2D drawing context
-	
 	// This will be defined on a TOUCH device such as iPad or Android, etc.
 	var is_touch_device = 'ontouchstart' in document.documentElement;
 
@@ -121,8 +124,6 @@ function initialize() {
 		};
 
 		// create a function to pass touch events and coordinates to drawer
-
-
 		function draw(event) {
 
 			// get the touch coordinates.  Using the first touch in case of multi-touch
@@ -185,8 +186,6 @@ function initialize() {
 
 // draws a line to the x and y coordinates of the mouse event inside
 // the specified element using the specified context
-
-
 function drawLine(mouseEvent, drawCanvas, context) {
 
 	var position = getPosition(mouseEvent, drawCanvas);
@@ -198,8 +197,6 @@ function drawLine(mouseEvent, drawCanvas, context) {
 // draws a line from the last coordiantes in the path to the finishing
 // coordinates and unbind any event handlers which need to be preceded
 // by the mouse down event
-
-
 function finishDrawing(mouseEvent, drawCanvas, context) {
 	// draw the line to the finishing coordinates
 	drawLine(mouseEvent, drawCanvas, context);
@@ -211,12 +208,16 @@ function finishDrawing(mouseEvent, drawCanvas, context) {
 }
 
 
+/***********************************
 
+		Tin Can Stuffs
+
+************************************/
 
 
 function generateStatement() {
 	if(localStorage.getItem('tc-draw-user') != null && localStorage.getItem('tc-draw-user') != '') {
-		var drawing = {}
+		var drawing = {};
 		drawing.base64data = canvas.toDataURL();
 		drawing.width = canvasWidth;
 		drawing.height = canvasHeight;
@@ -243,9 +244,10 @@ function generateStatement() {
 		s["object"].id = 'http://scorm.com/tcdraw-87dab09b-7c33-49a2-9080-06fbe54f1560';
 		s["object"].type = "Activity";
 
-		s.context = {};
-		s.context.extensions = {};
-		s.context.extensions["http://scorm.com/extensions/tcdraw-data"] = drawing;
+		s.result = {};
+		s.result.extensions = {};
+		s.result.extensions["http://scorm.com/extensions/tcdraw-data"] = drawing;
+		s.result.completion = true;
 
 		putStatement(s, function(data) {
 			console.log(data);
