@@ -4,9 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Tincandraw by RusticiSoftware</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
@@ -15,20 +13,18 @@
     <![endif]-->
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Tincandraw</h1>
-        <p>Example for capturing canvas data to tin can statements</p>
-        <p class="view"><a href="https://github.com/RusticiSoftware/TinCanDraw">View the Project on GitHub <small>RusticiSoftware/TinCanDraw</small></a></p>
-        <ul>
+ 
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+        <ul class="nav">
           <li><a href="https://github.com/RusticiSoftware/TinCanDraw/zipball/master">Download <strong>ZIP File</strong></a></li>
           <li><a href="https://github.com/RusticiSoftware/TinCanDraw/tarball/master">Download <strong>TAR Ball</strong></a></li>
           <li><a href="https://github.com/RusticiSoftware/TinCanDraw">View On <strong>GitHub</strong></a></li>
         </ul>
-      </header>
-      <section>
-        <h2>TinCanDraw</h2>
-
+        </div>
+      </div>
+    </div>
 <div class="container">
 
       <!-- Main hero unit for a primary marketing message or call to action -->
@@ -68,13 +64,21 @@
        </div>
        
       </div>
-</section>
-    </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/RusticiSoftware">RusticiSoftware</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
+</div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
+        <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-1.7.1.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script>
+    $(document).ready(function(){
+      $('#create-email').click(function(){
+        var link = window.location.href.replace('index.html','tcdraw.html');
+        if(link.indexOf('tcdraw.html')<0){
+          link += '/tcdraw.html';
+        }
+        window.open('mailto:'+$('#user-email').val()+'?subject=tcdraw-mobile-link&body='+link);
+      });
+    });
+    </script>
   </body>
 </html>
