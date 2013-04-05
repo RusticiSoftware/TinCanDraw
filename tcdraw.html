@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            TC Draw
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="css/tcdraw.css">
+        <link href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css">
+        <script src="http://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript"></script>
+        <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js" type="text/javascript"></script>
+        <script src="js/tcdraw.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div data-role="page" id="signin">
+            <div data-role="header" data-theme="e">
+                <h3>
+                    TC Draw Info
+                </h3>
+            </div>
+            <div data-role="content">
+              <div class="ui-bar">
+              <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" />
+                <label for="name">Your Email Address</label>
+                <input type="email" id="email" name="email" />
+                <a href="#" id="start" name="start" data-theme="a">Start Demo</a>
+            </div>
+          </div>
+        </div>
+        <div data-role="page" id="draw">
+            <div data-role="header" data-theme="e">
+                <a href="#" id="clear" data-theme="e">Clear</a>
+                <h3>
+                    TC Draw
+                </h3>
+                <a href="#" id="save" data-theme="b">Save</a>
+            </div>
+            <div data-role="content" id="drawContent">
+                <div id="tcdraw">
+                </div>
+            </div>
+        </div>
+        <div data-role="page" id="done">
+          <div data-role="content">
+            Thanks for that!
+            <a href="tcdraw-viewer.html">Click here to see all results</a>
+          </div>
+        </div>
+
+
+    </body>
+</html>
